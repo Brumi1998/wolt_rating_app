@@ -1,0 +1,1 @@
+# wolt_rating_app
