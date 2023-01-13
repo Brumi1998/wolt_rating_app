@@ -1,4 +1,4 @@
-data "archive_file" "lambda_zip"{
+data "archive_file" "lambda_zip" {
   type        = "zip"
   source_dir  = "../src"
   output_path = "lambda.zip"
@@ -25,7 +25,8 @@ EOF
 }
 
 resource "aws_lambda_function" "lambda" {
-  function_name    = "wolt rating handler"
+  function_name    = "lambda_handler"
+  handler          = "handler.lambda_handler"
   role             = aws_iam_role.iam_for_lambda.arn
   runtime          = "python3.8"
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256

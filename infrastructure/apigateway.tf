@@ -1,41 +1,3 @@
-resource "aws_api_gateway_rest_api" "wolt_rating" {
-  name        = "wolt_rating"
-  description = "API gateway for wolt_rating"
-
-  endpoint_configuration {
-    types = ["REGIONAL"]
-  }
-}
-
-resource "aws_api_gateway_api_key" "wolt_rating_api_key" {
-  name = "wolt_rating_api_key"
-}
-
-resource "aws_ssm_parameter" "name" {
-  name      = "/wolt_rating/credential/api_key/"
-  type      = "SecureString"
-  value     = aws_api_gateway_api_key.wolt_rating_api_key.value
-  overwrite = true
-}
-
-resource "aws_api_gateway_usage_plan" "wolt_rating" {
-  depends_on  = [aws_api_gateway_rest_api.wolt_rating]
-  name        = "wotlt_rating_usage_plan"
-  description = "usage plan for wolt_rating"
-}
-
-resource "aws_api_gateway_usage_plan_key" "key_assigment" {
-  key_id        = aws_api_gateway_api_key.wolt_rating_api_key.id
-  key_type      = "API_KEY"
-  usage_plan_id = aws_api_gateway_usage_plan.wolt_rating.id
-}
-
-
-
-######################################################################################
-
-
-
 resource "aws_apigatewayv2_api" "wolt_rating_api" {
   name          = "wolt_rating_api"
   protocol_type = "HTTP"
@@ -43,6 +5,28 @@ resource "aws_apigatewayv2_api" "wolt_rating_api" {
 
 resource "aws_apigatewayv2_stage" "lambda_stage" {
   api_id      = aws_apigatewayv2_api.wolt_rating_api.id
-  name        = "dev"
+  name        = "$default"
   auto_deploy = true
+}
+
+resource "aws_apigatewayv2_integration" "lambda_integretion_post" {
+  api_id               = aws_apigatewayv2_api.wolt_rating_api.id
+  integration_type     = "AWS_PROXY"
+  integration_method   = "POST"
+  integration_uri      = aws_lambda_function.lambda.invoke_arn
+  passthrough_behavior = "WHEN_NO_MATCH"
+}
+
+resource "aws_apigatewayv2_route" "lambda_route" {
+  api_id    = aws_apigatewayv2_api.wolt_rating_api.id
+  route_key = "GET /{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integretion_post.id}"
+}
+
+resource "aws_lambda_permission" "api-gw" {
+  action        = "lambda:invokeFunction"
+  function_name = aws_lambda_function.lambda.arn
+  principal     = "apigateway.amazonaws.com"
+  statement_id  = "AllowExecutionFromAPIGateway"
+  source_arn    = "${aws_apigatewayv2_api.wolt_rating_api.execution_arn}/*/*/*"
 }
