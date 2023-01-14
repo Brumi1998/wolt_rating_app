@@ -1,5 +1,10 @@
+from status_code_resolver import StatusCodeResolver
+
+
 def lambda_handler(event, context):
-    print('Hello world from Terraform')
+    status_cod = StatusCodeResolver.redolve(event)
+
     return {
-        'statusCode': 200,
+        'statusCode': status_cod,
+        'body': "hey aws"
     }

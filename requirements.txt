@@ -1,2 +1,4 @@
 boto3==1.26.45
 moto==4.0.13
+pydantic
+strawberry-graphql

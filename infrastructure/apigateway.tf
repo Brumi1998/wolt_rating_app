@@ -23,6 +23,12 @@ resource "aws_apigatewayv2_route" "lambda_route" {
   target    = "integrations/${aws_apigatewayv2_integration.lambda_integretion_post.id}"
 }
 
+resource "aws_apigatewayv2_route" "lambda_route_post" {
+  api_id    = aws_apigatewayv2_api.wolt_rating_api.id
+  route_key = "POST /{proxy+}"
+  target    = "integrations/${aws_apigatewayv2_integration.lambda_integretion_post.id}"
+}
+
 resource "aws_lambda_permission" "api-gw" {
   action        = "lambda:invokeFunction"
   function_name = aws_lambda_function.lambda.arn
