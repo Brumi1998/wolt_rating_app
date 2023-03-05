@@ -1,0 +1,9 @@
+
+infrastructure/terraform.tfstate
+infrastructure/.terraform.lock.hcl
+.idea/
+infrastructure/lambda.zip
+infrastructure/terraform.tfstate.backup
+infrastructure/.terraform/
+src/__pycache__/handler.cpython-310.pyc
+src/aws/dynamo/__pycache__/

@@ -1,4 +1,4 @@
-resource "aws_apigatewayv2_api" "wolt_rating_api" {
+/*resource "aws_apigatewayv2_api" "wolt_rating_api" {
   name          = "wolt_rating_api"
   protocol_type = "HTTP"
 }
@@ -34,5 +34,5 @@ resource "aws_lambda_permission" "api-gw" {
   function_name = aws_lambda_function.lambda.arn
   principal     = "apigateway.amazonaws.com"
   statement_id  = "AllowExecutionFromAPIGateway"
-  source_arn    = "${aws_apigatewayv2_api.wolt_rating_api.execution_arn}/*/*/*"
-}
+  source_arn    = "${aws_apigatewayv2_api.wolt_rating_api.execution_arn}
+*/
